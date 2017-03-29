@@ -2,20 +2,20 @@
  * Created by marginyu on 17/3/29.
  */
 
-import React,{PropTypes,Component} from 'react';
+import React,{PropTypes,Component,PureComponent} from 'react';
 
-let ID = 0; // incrementing counter for todo item ids
 
-const TodoItem = React.createClass({
 
-    propTypes: {
+class TodoItem extends PureComponent {
+
+    static propTypes =  {
         deleteItem: PropTypes.func.isRequired,
         tags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
         item: PropTypes.shape({
             text: PropTypes.string.isRequired,
             id: PropTypes.number.isRequired,
         }).isRequired,
-    },
+    };
 
     render() {
         return (
@@ -29,38 +29,42 @@ const TodoItem = React.createClass({
         );
     }
 
-});
+}
 
-const Todos = React.createClass({
+class Todos extends Component{
 
-    propTypes: {
+    // 构造
+      constructor(props) {
+        super(props);
+        // 初始状态
+        this.state = {
+            items: this.props.initialItems,
+            text: '',
+        };
+      }
+
+    static propTypes = {
         initialItems: PropTypes.arrayOf(PropTypes.shape({
             text: PropTypes.string.isRequired,
             id: PropTypes.number.isRequired,
         }).isRequired).isRequired,
-    },
-    getInitialState() {
-        return {
-            items: this.props.initialItems,
-            text: '',
-        };
-    },
+    };
 
-    addTask(e) {
+    addTask = (e)=>{
         e.preventDefault();
         this.setState({
             items: [{id: ID++, text: this.state.text}].concat(this.state.items),
             text: '',
         });
-    },
+    };
 
-    deleteItem(itemId) {
+    deleteItem = (itemId)=>{
         this.setState({
             items: this.state.items.filter((item) => item.id !== itemId),
         });
-    },
+    };
 
-    render: function () {
+    render() {
         return (
             <div>
                 <h1>My TODOs</h1>
@@ -77,16 +81,13 @@ const Todos = React.createClass({
             </div>
         );
     }
-});
+}
 
-// Create a Todos component, initialized with 1000 items.
+let ID = 0;
 const items = [];
-
 for (let i = 0; i < 1000; i++) {
     items.push({id: ID++, text: 'Todo Item #' + i});
 }
-
-console.log(items);
 
 class TodoList extends Component {
     render() {
