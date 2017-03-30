@@ -36,3 +36,5 @@ http://benchling.engineering/deep-dive-react-perf-debugging/ 原文
 
 https://segmentfault.com/a/1190000006911917#articleHeader1 译文
 
+https://zhangxinmiao.com/2017/02/21/betterreact/ React性能优化初探
+
