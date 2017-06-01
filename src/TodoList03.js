@@ -1,7 +1,4 @@
 /**
- * Created by marginyu on 17/3/30.
- */
-/**
  * Created by marginyu on 17/3/29.
  */
 
@@ -12,61 +9,56 @@ class TodoItem extends PureComponent {
 
     static propTypes =  {
         deleteItem: PropTypes.func.isRequired,
-        tags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
         item: PropTypes.shape({
             text: PropTypes.string.isRequired,
             id: PropTypes.number.isRequired,
         }).isRequired,
     };
 
+    deleteItem = ()=>{
+        let id = this.props.item.id;
+        this.props.deleteItem(id);
+    };
+
     render() {
         return (
             <div>
-                <button style={{width: 30}} onClick={this.props.deleteItem}>x</button>
+                <button style={{width: 30}} onClick={this.deleteItem}>X</button>
+                &nbsp;
                 <span>{this.props.item.text}</span>
-                {this.props.tags.map((tag) => {
-                    return <span key={tag} className="tag"> {tag}</span>;
-                })}
             </div>
         );
     }
 
 }
 
-class TodoItems extends PureComponent{
-    static propTypes = {
-        items:PropTypes.object.isRequired,
-        deleteItem:PropTypes.func.isRequired
+class AddItem extends Component{
+    // 构造
+      constructor(props) {
+        super(props);
+        // 初始状态
+        this.state = {
+            text:""
+        };
+      }
+
+    static PropTypes = {
+      addTask:PropTypes.func.isRequired
     };
 
-    render(){
-        const tags = ['important', 'starred'];
-        return(
-            <div>
-                {this.props.items.map((item) => {
-                    return (
-                        <TodoItem key={item.id} item={item} tags={tags}
-                                  deleteItem={()=>this.props.deleteItem(item.id)}/>
-                    );
-                })}
-            </div>
-        );
-    }
-}
-
-class AddItem extends PureComponent{
-
-    static propTypes = {
-      add:PropTypes.func.isRequired
+    addTask = (e)=>{
+        e.preventDefault();
+        this.props.addTask(this.state.text);
     };
 
     render(){
         return (
-            <form onSubmit={this.props.add}>
+            <form onSubmit={this.addTask}>
                 <input value={this.state.text} onChange={(v)=>{this.setState({text:v.target.value});}}/>
-                <button>Add Task</button>
+                <button>添加</button>
             </form>
         );
+
     }
 }
 
@@ -78,7 +70,6 @@ class Todos extends Component{
         // 初始状态
         this.state = {
             items: this.props.initialItems,
-            text: '',
         };
     }
 
@@ -89,10 +80,9 @@ class Todos extends Component{
         }).isRequired).isRequired,
     };
 
-    addTask = (e)=>{
-        e.preventDefault();
+    addTask = (text)=>{
         this.setState({
-            items: [{id: ID++, text: this.state.text}].concat(this.state.items),
+            items: [{id: ID++, text:text}].concat(this.state.items),
             text: '',
         });
     };
@@ -106,9 +96,15 @@ class Todos extends Component{
     render() {
         return (
             <div>
-                <h1>My TODOs</h1>
-                <AddItem add={this.addTask} />
-                <TodoItems items={this.state.items} deleteItem={this.deleteItem}/>
+                <h1>待办事项V3</h1>
+                <AddItem addTask={this.addTask}/>
+                {this.state.items.map((item) => {
+                    return (
+                        <TodoItem key={item.id}
+                                  item={item}
+                                  deleteItem={this.deleteItem}/>
+                    );
+                })}
             </div>
         );
     }
@@ -117,16 +113,16 @@ class Todos extends Component{
 let ID = 0;
 const items = [];
 for (let i = 0; i < 1000; i++) {
-    items.push({id: ID++, text: 'Todo Item #' + i});
+    items.push({id: ID++, text: '事项' + i});
 }
 
-class TodoList extends Component {
+class TodoList03 extends Component {
     render() {
         return (
-            <Todos initialItems={items}/>
+            <Todos  initialItems={items}/>
         );
     }
 }
 
 
-export default TodoList;
+export default TodoList03;

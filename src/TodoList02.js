@@ -1,33 +1,31 @@
 /**
- * Created by marginyu on 17/3/30.
- */
-/**
  * Created by marginyu on 17/3/29.
  */
 
 import React,{PropTypes,Component,PureComponent} from 'react';
 
 
-
 class TodoItem extends PureComponent {
 
     static propTypes =  {
         deleteItem: PropTypes.func.isRequired,
-        tags: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
         item: PropTypes.shape({
             text: PropTypes.string.isRequired,
             id: PropTypes.number.isRequired,
         }).isRequired,
     };
 
+    deleteItem = ()=>{
+        let id = this.props.item.id;
+        this.props.deleteItem(id);
+    };
+
     render() {
         return (
             <div>
-                <button style={{width: 30}} onClick={this.props.deleteItem}>x</button>
+                <button style={{width: 30}} onClick={this.deleteItem}>X</button>
+                &nbsp;
                 <span>{this.props.item.text}</span>
-                {this.props.tags.map((tag) => {
-                    return <span key={tag} className="tag"> {tag}</span>;
-                })}
             </div>
         );
     }
@@ -68,19 +66,18 @@ class Todos extends Component{
     };
 
     render() {
-        const tags = ['important', 'starred'];
-        
         return (
             <div>
-                <h1>My TODOs</h1>
+                <h1>待办事项V2</h1>
                 <form onSubmit={this.addTask}>
                     <input value={this.state.text} onChange={(v)=>{this.setState({text:v.target.value});}}/>
-                    <button>Add Task</button>
+                    <button>添加</button>
                 </form>
                 {this.state.items.map((item) => {
                     return (
-                        <TodoItem key={item.id} item={item} tags={tags}
-                                  deleteItem={()=>this.deleteItem(item.id)}/>
+                        <TodoItem key={item.id}
+                                  item={item}
+                                  deleteItem={this.deleteItem}/>
                     );
                 })}
             </div>
@@ -91,10 +88,10 @@ class Todos extends Component{
 let ID = 0;
 const items = [];
 for (let i = 0; i < 1000; i++) {
-    items.push({id: ID++, text: 'Todo Item #' + i});
+    items.push({id: ID++, text: '事项' + i});
 }
 
-class TodoList extends Component {
+class TodoList02 extends Component {
     render() {
         return (
             <Todos initialItems={items}/>
@@ -103,4 +100,4 @@ class TodoList extends Component {
 }
 
 
-export default TodoList;
+export default TodoList02;
